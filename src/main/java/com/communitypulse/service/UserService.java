@@ -1,11 +1,13 @@
 package com.communitypulse.service;
 
+import com.communitypulse.dto.request.UpdateProfileRequest;
 import com.communitypulse.dto.response.UserResponse;
 import com.communitypulse.entity.User;
 import com.communitypulse.exception.ResourceNotFoundException;
 import com.communitypulse.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,6 +47,24 @@ public class UserService {
     public User getUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
+    }
+
+    /**
+     * Updates the current user's profile (fullName, bio, skills).
+     *
+     * @param username the authenticated user's username
+     * @param request  the update data
+     * @return updated UserResponse DTO
+     */
+    @Transactional
+    public UserResponse updateProfile(String username, UpdateProfileRequest request) {
+        User user = getUserByUsername(username);
+        user.setFullName(request.getFullName());
+        user.setBio(request.getBio());
+        user.setSkills(request.getSkills());
+        User saved = userRepository.save(user);
+        log.info("Profile updated for user '{}'", username);
+        return toUserResponse(saved);
     }
 
     /**

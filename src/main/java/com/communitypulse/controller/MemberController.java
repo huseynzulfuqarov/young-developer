@@ -1,7 +1,9 @@
 package com.communitypulse.controller;
 
+import com.communitypulse.dto.request.UpdateProfileRequest;
 import com.communitypulse.dto.response.UserResponse;
 import com.communitypulse.service.UserService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -25,6 +27,13 @@ public class MemberController {
         return ResponseEntity.ok(
                 userService.toUserResponse(userService.getUserByUsername(authentication.getName()))
         );
+    }
+
+    @PutMapping("/me")
+    public ResponseEntity<UserResponse> updateProfile(
+            @Valid @RequestBody UpdateProfileRequest request,
+            Authentication authentication) {
+        return ResponseEntity.ok(userService.updateProfile(authentication.getName(), request));
     }
 
     @GetMapping
