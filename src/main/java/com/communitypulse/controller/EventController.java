@@ -4,7 +4,6 @@ import com.communitypulse.dto.request.CreateEventRequest;
 import com.communitypulse.entity.Event;
 import com.communitypulse.entity.EventAttendance;
 import com.communitypulse.service.EventService;
-import com.communitypulse.service.UserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

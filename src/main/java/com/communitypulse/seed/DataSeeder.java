@@ -126,7 +126,7 @@ public class DataSeeder implements CommandLineRunner {
         Badge streakWarrior = badgeRepository.save(Badge.builder()
                 .name("Streak Warrior").description("Maintained a 7+ day streak").iconUrl("🔥")
                 .badgeType(BadgeType.STREAK_WARRIOR).requiredPoints(0).build());
-        Badge eventMaster = badgeRepository.save(Badge.builder()
+        badgeRepository.save(Badge.builder()
                 .name("Event Master").description("Attended 5+ events").iconUrl("🎪")
                 .badgeType(BadgeType.EVENT_MASTER).requiredPoints(0).build());
         Badge communityFounder = badgeRepository.save(Badge.builder()
@@ -135,7 +135,7 @@ public class DataSeeder implements CommandLineRunner {
         Badge risingStar = badgeRepository.save(Badge.builder()
                 .name("Rising Star").description("Earned 500+ total points").iconUrl("⭐")
                 .badgeType(BadgeType.RISING_STAR).requiredPoints(500).build());
-        Badge connector = badgeRepository.save(Badge.builder()
+        badgeRepository.save(Badge.builder()
                 .name("Connector").description("Member of 3+ communities").iconUrl("🤝")
                 .badgeType(BadgeType.CONNECTOR).requiredPoints(0).build());
 

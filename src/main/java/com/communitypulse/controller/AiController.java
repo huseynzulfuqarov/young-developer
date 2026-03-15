@@ -27,7 +27,6 @@ public class AiController {
     private final CommunityMembershipRepository membershipRepository;
     private final StreakRepository streakRepository;
     private final UserService userService;
-    private final NotificationService notificationService;
     private final UserBadgeRepository userBadgeRepository;
     private final EventAttendanceRepository eventAttendanceRepository;
 
@@ -37,7 +36,6 @@ public class AiController {
                         CommunityMembershipRepository membershipRepository,
                         StreakRepository streakRepository,
                         UserService userService,
-                        NotificationService notificationService,
                         UserBadgeRepository userBadgeRepository,
                         EventAttendanceRepository eventAttendanceRepository) {
         this.geminiAiService = geminiAiService;
@@ -46,7 +44,6 @@ public class AiController {
         this.membershipRepository = membershipRepository;
         this.streakRepository = streakRepository;
         this.userService = userService;
-        this.notificationService = notificationService;
         this.userBadgeRepository = userBadgeRepository;
         this.eventAttendanceRepository = eventAttendanceRepository;
     }

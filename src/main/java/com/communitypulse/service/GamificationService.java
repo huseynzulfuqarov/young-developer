@@ -1,7 +1,6 @@
 package com.communitypulse.service;
 
 import com.communitypulse.entity.Badge;
-import com.communitypulse.entity.CommunityMembership;
 import com.communitypulse.entity.UserBadge;
 import com.communitypulse.enums.BadgeType;
 import com.communitypulse.repository.BadgeRepository;
