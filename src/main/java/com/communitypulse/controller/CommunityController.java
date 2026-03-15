@@ -50,6 +50,11 @@ public class CommunityController {
         return ResponseEntity.ok(communityService.updateCommunity(id, request, authentication.getName()));
     }
 
+    @GetMapping("/my")
+    public ResponseEntity<List<CommunityResponse>> getMyCommunities(Authentication authentication) {
+        return ResponseEntity.ok(communityService.getMyCommunities(authentication.getName()));
+    }
+
     @PostMapping("/{id}/join")
     public ResponseEntity<Void> joinCommunity(@PathVariable Long id, Authentication authentication) {
         communityService.joinCommunity(id, authentication.getName());

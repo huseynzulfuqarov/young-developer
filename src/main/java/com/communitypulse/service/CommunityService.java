@@ -158,6 +158,19 @@ public class CommunityService {
     }
 
     /**
+     * Returns communities the current user has joined.
+     */
+    public List<CommunityResponse> getMyCommunities(String username) {
+        User user = userService.getUserByUsername(username);
+        List<CommunityMembership> memberships = membershipRepository.findByUserId(user.getId());
+        return memberships.stream()
+                .map(m -> communityRepository.findById(m.getCommunityId()).orElse(null))
+                .filter(c -> c != null && c.isActive())
+                .map(this::toCommunityResponse)
+                .collect(Collectors.toList());
+    }
+
+    /**
      * Lists all members of a community.
      */
     public List<UserResponse> getCommunityMembers(Long communityId) {
