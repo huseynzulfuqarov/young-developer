@@ -47,6 +47,19 @@ public class EventController {
         return ResponseEntity.ok(eventService.getEventAttendees(id));
     }
 
+    @DeleteMapping("/{id}/unattend")
+    public ResponseEntity<Void> unattendEvent(@PathVariable Long id, Authentication authentication) {
+        eventService.unattendEvent(id, authentication.getName());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}/attendees/{userId}/confirm")
+    public ResponseEntity<EventAttendance> confirmAttendance(@PathVariable Long id,
+                                                              @PathVariable Long userId,
+                                                              Authentication authentication) {
+        return ResponseEntity.ok(eventService.confirmAttendance(id, userId, authentication.getName()));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Event> updateEvent(@PathVariable Long id,
                                              @Valid @RequestBody CreateEventRequest request,

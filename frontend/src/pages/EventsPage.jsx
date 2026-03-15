@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar as CalendarIcon, Users, Plus, Trash2 } from 'lucide-react';
+import { Calendar as CalendarIcon, Users, Plus, Trash2, CheckCircle, XCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 import MainLayout from '../components/layout/MainLayout';
@@ -14,7 +14,7 @@ import EmptyState from '../components/common/EmptyState';
 import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
 
-const EventCard = ({ event, onAttend, userId, onViewAttendees, onDelete }) => {
+const EventCard = ({ event, onAttend, onUnattend, userId, onViewAttendees, onDelete }) => {
   const { data: attendees, request: fetchAttendees, loading } = useApi();
   
   useEffect(() => {
@@ -63,11 +63,11 @@ const EventCard = ({ event, onAttend, userId, onViewAttendees, onDelete }) => {
         )}
         <Button 
           variant={isAttending ? "secondary" : "primary"} 
-          disabled={isAttending || loading}
-          onClick={() => onAttend(event.id)}
+          disabled={loading}
+          onClick={() => isAttending ? onUnattend(event.id) : onAttend(event.id)}
           style={{ flex: 1 }}
         >
-          {loading ? 'Checking...' : isAttending ? 'Registered ✅' : 'Attend Event'}
+          {loading ? 'Checking...' : isAttending ? '✅ Registered — Cancel?' : 'Attend Event'}
         </Button>
       </div>
     </GlassCard>
@@ -87,6 +87,8 @@ const EventsPage = () => {
   const { request: createEvent, loading: creating } = useApi();
   const { request: attendEvent } = useApi();
   const { request: deleteEventApi } = useApi();
+  const { request: unattendEventApi } = useApi();
+  const { request: confirmAttendanceApi } = useApi();
 
   useEffect(() => {
     const init = async () => {
@@ -135,6 +137,24 @@ const EventsPage = () => {
     }
   };
 
+  const handleUnattend = async (eventId) => {
+    const res = await unattendEventApi('delete', `/events/${eventId}/unattend`);
+    if (res.success) {
+      toast.success('Registration cancelled');
+      fetchEvents('get', `/events/community/${selectedCommunityId}`);
+    }
+  };
+
+  const handleConfirmAttendance = async (eventId, userId) => {
+    const res = await confirmAttendanceApi('put', `/events/${eventId}/attendees/${userId}/confirm`);
+    if (res.success) {
+      toast.success(res.data?.attended ? 'Attendance confirmed ✅' : 'Attendance unconfirmed');
+      // refresh attendee list in modal
+      const atRes = await confirmAttendanceApi('get', `/events/${eventId}/attendees`);
+      if (atRes.success) setAttendeeModalData(prev => ({ ...prev, attendees: atRes.data }));
+    }
+  };
+
   return (
     <MainLayout>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
@@ -178,7 +198,8 @@ const EventsPage = () => {
               <motion.div key={event.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={{height: '100%'}}>
                 <EventCard 
                   event={event} 
-                  onAttend={handleAttend} 
+                  onAttend={handleAttend}
+                  onUnattend={handleUnattend}
                   userId={user?.userId}
                   onViewAttendees={(ev, att) => setAttendeeModalData({ event: ev, attendees: att })}
                   onDelete={handleDeleteEvent}
@@ -243,10 +264,23 @@ const EventsPage = () => {
                 <div key={attendance.id} className="premium-list-item" style={{ 
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between', 
                   padding: '1rem', background: 'rgba(255,255,255,0.03)', 
-                  borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' 
+                  borderRadius: 'var(--radius-md)', border: `1px solid ${attendance.attended ? 'rgba(34,197,94,0.3)' : 'var(--border-subtle)'}` 
                 }}>
-                  <div style={{ fontWeight: 600 }}>User ID: {attendance.userId}</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--accent-success)' }}>Registered</div>
+                  <div>
+                    <div style={{ fontWeight: 600 }}>User #{attendance.userId}</div>
+                    <div style={{ fontSize: '0.75rem', color: attendance.attended ? 'var(--accent-success)' : 'var(--text-muted)' }}>
+                      {attendance.attended ? '✅ Attended' : '⏳ Registered only'}
+                    </div>
+                  </div>
+                  <button onClick={() => handleConfirmAttendance(attendeeModalData.event.id, attendance.userId)} style={{
+                    background: attendance.attended ? 'rgba(239, 68, 68, 0.1)' : 'rgba(34, 197, 94, 0.1)',
+                    border: `1px solid ${attendance.attended ? 'rgba(239,68,68,0.3)' : 'rgba(34,197,94,0.3)'}`,
+                    borderRadius: 'var(--radius-md)', padding: '0.5rem 0.75rem', cursor: 'pointer',
+                    display: 'flex', alignItems: 'center', gap: '0.25rem',
+                    color: attendance.attended ? 'var(--accent-danger)' : 'var(--accent-success)', fontSize: '0.8rem'
+                  }}>
+                    {attendance.attended ? <><XCircle size={14} /> Unmark</> : <><CheckCircle size={14} /> Confirm</>}
+                  </button>
                 </div>
               ))
             ) : (

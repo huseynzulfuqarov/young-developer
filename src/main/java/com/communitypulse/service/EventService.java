@@ -101,16 +101,57 @@ public class EventService {
         EventAttendance attendance = EventAttendance.builder()
                 .eventId(eventId)
                 .userId(user.getId())
-                .attended(true)
+                .attended(false)  // registered but not yet confirmed as attended
                 .build();
 
         EventAttendance saved = attendanceRepository.save(attendance);
 
-        // Award 50 points for event attendance
-        gamificationService.awardPoints(user.getId(), event.getCommunityId(), 50);
-        gamificationService.checkEventBadge(user.getId(), event.getCommunityId());
+        // Award 25 points for registration
+        gamificationService.awardPoints(user.getId(), event.getCommunityId(), 25);
 
         log.info("User '{}' registered for event '{}'", username, event.getTitle());
+        return saved;
+    }
+
+    /**
+     * Allows user to cancel event registration.
+     */
+    @Transactional
+    public void unattendEvent(Long eventId, String username) {
+        User user = userService.getUserByUsername(username);
+        EventAttendance attendance = attendanceRepository.findByEventIdAndUserId(eventId, user.getId())
+                .orElseThrow(() -> new BadRequestException("You are not registered for this event"));
+        attendanceRepository.delete(attendance);
+        log.info("User '{}' cancelled registration for event ID {}", username, eventId);
+    }
+
+    /**
+     * Creator confirms that a user actually attended the event.
+     */
+    @Transactional
+    public EventAttendance confirmAttendance(Long eventId, Long userId, String creatorUsername) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new ResourceNotFoundException("Event", "id", eventId));
+
+        User creator = userService.getUserByUsername(creatorUsername);
+        if (!event.getCreatedByUserId().equals(creator.getId())) {
+            throw new BadRequestException("Only the event creator can confirm attendance");
+        }
+
+        EventAttendance attendance = attendanceRepository.findByEventIdAndUserId(eventId, userId)
+                .orElseThrow(() -> new BadRequestException("User is not registered for this event"));
+
+        attendance.setAttended(!attendance.isAttended()); // toggle
+        EventAttendance saved = attendanceRepository.save(attendance);
+
+        if (saved.isAttended()) {
+            // Award extra 25 points for confirmed attendance
+            gamificationService.awardPoints(userId, event.getCommunityId(), 25);
+            gamificationService.checkEventBadge(userId, event.getCommunityId());
+        }
+
+        log.info("Attendance {} for user ID {} at event '{}'",
+                saved.isAttended() ? "confirmed" : "unconfirmed", userId, event.getTitle());
         return saved;
     }
 

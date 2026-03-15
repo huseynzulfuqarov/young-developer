@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Users, Flame, Calendar, Award, Megaphone, Sparkles, User as UserIcon, LogOut } from 'lucide-react';
+import { LayoutDashboard, Users, Flame, Calendar, Award, Megaphone, Sparkles, User as UserIcon, LogOut, Crown } from 'lucide-react';
 import useAuth from '../../hooks/useAuth';
 
 const Sidebar = ({ isOpen, closeSidebar }) => {
@@ -17,6 +17,7 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
     { icon: Flame, label: 'My Streaks', path: '/streaks' },
     { icon: Sparkles, label: 'AI Insights', path: '/ai-insights' },
     { icon: Megaphone, label: 'Advertisements', path: '/ads' },
+    { icon: Crown, label: 'Pricing', path: '/pricing' },
     { icon: UserIcon, label: 'Profile', path: '/profile' }
   ];
 

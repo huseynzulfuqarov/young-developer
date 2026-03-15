@@ -14,6 +14,7 @@ import LeaderboardPage from './pages/LeaderboardPage';
 import AdsPage from './pages/AdsPage';
 import AiInsightsPage from './pages/AiInsightsPage';
 import ProfilePage from './pages/ProfilePage';
+import PricingPage from './pages/PricingPage';
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -48,6 +49,7 @@ function App() {
           <Route path="/ads" element={<ProtectedRoute><AdsPage /></ProtectedRoute>} />
           <Route path="/ai-insights" element={<ProtectedRoute><AiInsightsPage /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+          <Route path="/pricing" element={<ProtectedRoute><PricingPage /></ProtectedRoute>} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
