@@ -46,7 +46,7 @@ function App() {
           <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
           <Route path="/leaderboard" element={<ProtectedRoute><LeaderboardPage /></ProtectedRoute>} />
           <Route path="/ads" element={<ProtectedRoute><AdsPage /></ProtectedRoute>} />
-          <Route path="/ai" element={<ProtectedRoute><AiInsightsPage /></ProtectedRoute>} />
+          <Route path="/ai-insights" element={<ProtectedRoute><AiInsightsPage /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
         </Routes>
       </BrowserRouter>
