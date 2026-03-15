@@ -10,15 +10,21 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+import com.communitypulse.enums.NotificationType;
+import com.communitypulse.entity.User;
+import com.communitypulse.service.UserService;
+
 @RestController
 @RequestMapping("/api/notifications")
 @Slf4j
 public class NotificationController {
 
     private final NotificationService notificationService;
+    private final UserService userService;
 
-    public NotificationController(NotificationService notificationService) {
+    public NotificationController(NotificationService notificationService, UserService userService) {
         this.notificationService = notificationService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -42,5 +48,25 @@ public class NotificationController {
     public ResponseEntity<Void> markAllAsRead(Authentication authentication) {
         notificationService.markAllAsRead(authentication.getName());
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/send")
+    public ResponseEntity<Map<String, String>> sendNotification(
+            @RequestBody Map<String, Object> payload,
+            Authentication authentication) {
+        String targetUsername = (String) payload.get("targetUsername");
+        Long communityId = Long.valueOf(payload.get("communityId").toString());
+        String title = (String) payload.get("title");
+        String message = (String) payload.get("message");
+
+        User targetUser = userService.getUserByUsername(targetUsername);
+
+        notificationService.createNotification(
+                targetUser.getId(), communityId, title, message,
+                NotificationType.RE_ENGAGEMENT, true
+        );
+
+        log.info("AI notification sent to '{}' by '{}'", targetUsername, authentication.getName());
+        return ResponseEntity.ok(Map.of("status", "sent", "targetUser", targetUsername));
     }
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Search, Users, LogOut } from 'lucide-react';
+import { Plus, Search, Users, LogOut, Calendar, User as UserIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
 import MainLayout from '../components/layout/MainLayout';
 import GlassCard from '../components/common/GlassCard';
@@ -12,6 +12,7 @@ import { Skeleton } from '../components/common/Loader';
 import EmptyState from '../components/common/EmptyState';
 import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
+import Avatar from '../components/common/Avatar';
 
 const CommunityCard = ({ community, onJoin, onLeave, userId, joinedIds, onViewDetails }) => {
   const isOwner = community.ownerUserId === userId;
@@ -68,6 +69,11 @@ const CommunitiesPage = () => {
   const { request: joinCommunity } = useApi();
   const { request: leaveCommunity } = useApi();
   const { request: fetchMyCommunities } = useApi();
+  const { request: fetchCommunityMembers } = useApi();
+  const { request: fetchCommunityEvents } = useApi();
+  const [detailMembers, setDetailMembers] = useState([]);
+  const [detailEvents, setDetailEvents] = useState([]);
+  const [detailTab, setDetailTab] = useState('about');
 
   const loadData = async () => {
     fetchCommunities('get', '/communities');
@@ -185,7 +191,7 @@ const CommunitiesPage = () => {
       </Modal>
 
       {/* Community Details Modal */}
-      <Modal isOpen={!!selectedCommunity} onClose={() => setSelectedCommunity(null)} title="Community Details">
+      <Modal isOpen={!!selectedCommunity} onClose={() => { setSelectedCommunity(null); setDetailTab('about'); }} title="Community Details">
         {selectedCommunity && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -197,21 +203,78 @@ const CommunitiesPage = () => {
                 <Badge variant="info" style={{ marginTop: '0.25rem', display: 'inline-block' }}>{selectedCommunity.category}</Badge>
               </div>
             </div>
-            
-            <div style={{ background: 'rgba(255,255,255,0.03)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
-               <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>About</h4>
-               <p style={{ margin: 0, lineHeight: 1.6, color: 'var(--text-primary)' }}>{selectedCommunity.description}</p>
+
+            {/* Tabs */}
+            <div style={{ display: 'flex', gap: '0.5rem', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '0.5rem' }}>
+              {['about', 'members', 'events'].map(tab => (
+                <button key={tab} onClick={async () => {
+                  setDetailTab(tab);
+                  if (tab === 'members' && detailMembers.length === 0) {
+                    const res = await fetchCommunityMembers('get', `/communities/${selectedCommunity.id}/members`);
+                    if (res.success) setDetailMembers(res.data || []);
+                  }
+                  if (tab === 'events' && detailEvents.length === 0) {
+                    const res = await fetchCommunityEvents('get', `/events/community/${selectedCommunity.id}`);
+                    if (res.success) setDetailEvents(res.data || []);
+                  }
+                }} style={{
+                  padding: '0.5rem 1rem', borderRadius: 'var(--radius-md)', border: 'none',
+                  background: detailTab === tab ? 'var(--accent-primary)' : 'rgba(255,255,255,0.05)',
+                  color: detailTab === tab ? 'white' : 'var(--text-secondary)',
+                  fontWeight: 600, cursor: 'pointer', textTransform: 'capitalize', fontSize: '0.875rem',
+                  transition: 'all 0.2s'
+                }}>{tab}</button>
+              ))}
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', borderTop: '1px solid var(--border-subtle)', paddingTop: '1.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-secondary)' }}>
-                <Users size={20} color="var(--accent-primary)" />
-                <div>
-                  <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Members</div>
-                  <div style={{ fontSize: '1.125rem', fontWeight: 700, color: 'var(--text-primary)' }}>{selectedCommunity.memberCount || 0}</div>
+            {/* Tab Content */}
+            {detailTab === 'about' && (
+              <div>
+                <div style={{ background: 'rgba(255,255,255,0.03)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
+                   <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Description</h4>
+                   <p style={{ margin: 0, lineHeight: 1.6, color: 'var(--text-primary)' }}>{selectedCommunity.description}</p>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', marginTop: '1.5rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-secondary)' }}>
+                    <Users size={20} color="var(--accent-primary)" />
+                    <div>
+                      <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Members</div>
+                      <div style={{ fontSize: '1.125rem', fontWeight: 700, color: 'var(--text-primary)' }}>{selectedCommunity.memberCount || 0}</div>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
+
+            {detailTab === 'members' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', maxHeight: '350px', overflowY: 'auto' }}>
+                {detailMembers.length > 0 ? detailMembers.map(m => (
+                  <div key={m.id} className="premium-list-item" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.75rem 1rem', background: 'rgba(255,255,255,0.03)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
+                    <Avatar alt={m.fullName || m.username} size="40px" />
+                    <div>
+                      <div style={{ fontWeight: 600 }}>{m.fullName || m.username}</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>@{m.username}</div>
+                    </div>
+                  </div>
+                )) : <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>No members found.</div>}
+              </div>
+            )}
+
+            {detailTab === 'events' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', maxHeight: '350px', overflowY: 'auto' }}>
+                {detailEvents.length > 0 ? detailEvents.map(e => (
+                  <div key={e.id} className="premium-list-item" style={{ padding: '1rem', background: 'rgba(255,255,255,0.03)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
+                      <h4 style={{ margin: 0, fontWeight: 600 }}>{e.title}</h4>
+                      <Badge variant={e.eventType === 'ONLINE' ? 'info' : 'primary'}>{e.eventType}</Badge>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                      <Calendar size={14} /> {e.eventDate ? new Date(e.eventDate).toLocaleDateString() : 'TBD'}
+                    </div>
+                  </div>
+                )) : <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>No events yet.</div>}
+              </div>
+            )}
 
             <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem' }}>
               {selectedCommunity.ownerUserId === user?.userId ? (

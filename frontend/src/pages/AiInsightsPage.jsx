@@ -68,7 +68,12 @@ const AiInsightsPage = () => {
 
   const handleSendNotification = async () => {
     if (!aiNotif) return;
-    const res = await sendNotification('post', `/ai/generate-notification/${selectedCommunityId}?memberName=${notifForm.memberName}&daysInactive=${notifForm.daysInactive}&previousStreak=${notifForm.previousStreak}`);
+    const res = await sendNotification('post', '/notifications/send', {
+      targetUsername: notifForm.memberName,
+      communityId: parseInt(selectedCommunityId),
+      title: aiNotif.title,
+      message: aiNotif.message
+    });
     if (res.success) {
       toast.success(`Notification sent to ${notifForm.memberName}! 📬`);
     } else {
