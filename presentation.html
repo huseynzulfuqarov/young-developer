@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<title>CommunityPulse — Təqdimat</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+  
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  @page { size: landscape; margin: 0; }
+  
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #0a0a12;
+    color: #f1f5f9;
+  }
+
+  .slide {
+    width: 100vw;
+    height: 100vh;
+    padding: 60px 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+  }
+
+  /* Slide 1 — Hero */
+  .slide-1 {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+    text-align: center;
+    align-items: center;
+  }
+  .slide-1::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .slide-1::after {
+    content: '';
+    position: absolute;
+    bottom: -150px; left: -150px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .slide-1 h1 {
+    font-size: 72px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #818cf8, #a78bfa, #c084fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 16px;
+    letter-spacing: -2px;
+    z-index: 1;
+  }
+  .slide-1 .tagline {
+    font-size: 28px;
+    color: #94a3b8;
+    font-weight: 500;
+    margin-bottom: 40px;
+    z-index: 1;
+  }
+  .slide-1 .team {
+    font-size: 18px;
+    color: #64748b;
+    z-index: 1;
+  }
+  .slide-1 .team strong { color: #a5b4fc; }
+
+  /* Slide 2 — Problem */
+  .slide-2 {
+    background: linear-gradient(135deg, #0f172a 0%, #1a1a2e 100%);
+  }
+  .slide-2 h2 {
+    font-size: 42px;
+    font-weight: 800;
+    margin-bottom: 40px;
+    color: #f87171;
+  }
+  .problem-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .problem-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 28px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .problem-card .icon {
+    font-size: 32px;
+    flex-shrink: 0;
+  }
+  .problem-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #e2e8f0;
+  }
+  .problem-card p {
+    font-size: 14px;
+    color: #94a3b8;
+    line-height: 1.5;
+  }
+
+  /* Slide 3 — Solution */
+  .slide-3 {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+  }
+  .slide-3 h2 {
+    font-size: 42px;
+    font-weight: 800;
+    margin-bottom: 40px;
+    color: #34d399;
+  }
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+  }
+  .feature-card {
+    background: linear-gradient(135deg, rgba(99,102,241,0.08) 0%, rgba(139,92,246,0.04) 100%);
+    border: 1px solid rgba(99,102,241,0.2);
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+  }
+  .feature-card .icon { font-size: 36px; margin-bottom: 12px; }
+  .feature-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #e2e8f0;
+  }
+  .feature-card p {
+    font-size: 13px;
+    color: #94a3b8;
+    line-height: 1.4;
+  }
+
+  /* Slide 4 — Tech & Business */
+  .slide-4 {
+    background: linear-gradient(135deg, #0f172a 0%, #1a1a2e 100%);
+  }
+  .slide-4 h2 {
+    font-size: 42px;
+    font-weight: 800;
+    margin-bottom: 32px;
+    color: #60a5fa;
+  }
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+  .col-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgba(99,102,241,0.3);
+  }
+  .tech-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .tech-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    color: #cbd5e1;
+  }
+  .tech-list li .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #818cf8;
+    flex-shrink: 0;
+  }
+  .revenue-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+  }
+  .revenue-card h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fbbf24;
+    margin-bottom: 4px;
+  }
+  .revenue-card p {
+    font-size: 13px;
+    color: #94a3b8;
+  }
+
+  /* Slide 5 — Demo & Summary */
+  .slide-5 {
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%);
+    text-align: center;
+    align-items: center;
+  }
+  .slide-5 h2 {
+    font-size: 48px;
+    font-weight: 900;
+    margin-bottom: 32px;
+    background: linear-gradient(135deg, #818cf8, #c084fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+  .summary-stat {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 24px;
+  }
+  .summary-stat .num {
+    font-size: 36px;
+    font-weight: 900;
+    color: #a5b4fc;
+  }
+  .summary-stat .label {
+    font-size: 14px;
+    color: #94a3b8;
+    margin-top: 4px;
+  }
+  .demo-url {
+    font-size: 22px;
+    color: #a5b4fc;
+    font-weight: 600;
+    margin-top: 20px;
+  }
+  .cta {
+    font-size: 28px;
+    color: #e2e8f0;
+    font-weight: 700;
+    margin-top: 32px;
+  }
+
+  .footer {
+    position: absolute;
+    bottom: 24px;
+    left: 80px;
+    right: 80px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #475569;
+  }
+
+  @media print {
+    .slide { page-break-after: always; }
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ SLIDE 1: Title ============ -->
+<div class="slide slide-1">
+  <h1>CommunityPulse</h1>
+  <div class="tagline">AI ilə gücləndirilmiş icma idarəetmə platforması</div>
+  <div class="team">
+    Komanda: <strong>YOUNG DEVELOPERS</strong><br>
+    Hackathon 2026
+  </div>
+  <div class="footer">
+    <span>CommunityPulse © 2026</span>
+    <span>Səhifə 1/5</span>
+  </div>
+</div>
+
+<!-- ============ SLIDE 2: Problem ============ -->
+<div class="slide slide-2">
+  <h2>🔴 Problem</h2>
+  <div class="problem-grid">
+    <div class="problem-card">
+      <div class="icon">📉</div>
+      <div>
+        <h3>Üzvlərin itirilməsi</h3>
+        <p>İcmaların 60%-i ilk 3 ayda üzvlərinin yarısını itirir. Kimlər risk altındadır — bunu heç bir platforma göstərmir.</p>
+      </div>
+    </div>
+    <div class="problem-card">
+      <div class="icon">🔕</div>
+      <div>
+        <h3>Bildirişlər effektsizdir</h3>
+        <p>Standart "Sizi görmürük" mesajları 5%-dən az açılır. Psixoloji prinsiplərə əsaslanmır.</p>
+      </div>
+    </div>
+    <div class="problem-card">
+      <div class="icon">📊</div>
+      <div>
+        <h3>Analitika yoxdur</h3>
+        <p>İcma rəhbərləri üzvlərin aktivliyini, streakləri və engagement trendlərini görə bilmir.</p>
+      </div>
+    </div>
+    <div class="problem-card">
+      <div class="icon">🎯</div>
+      <div>
+        <h3>Hədəflənmiş reklamlar yoxdur</h3>
+        <p>İş elanları və investisiya fürsətləri üzvlərin bacarıqlarına uyğun göstərilmir.</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <span>CommunityPulse — Problem</span>
+    <span>Səhifə 2/5</span>
+  </div>
+</div>
+
+<!-- ============ SLIDE 3: Solution / Features ============ -->
+<div class="slide slide-3">
+  <h2>✅ Həllimiz: CommunityPulse</h2>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="icon">🔥</div>
+      <h3>Streak Sistemi</h3>
+      <p>Gündəlik check-in, streak izləmə, uzun seriya mükafatları — istifadəçiləri geri qaytarır</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">🤖</div>
+      <h3>AI Analitika</h3>
+      <p>Gemini 2.5 Flash ilə — icma sağlamlığı qiymətləndirməsi, fərdi üzv təhlili, tövsiyələr</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">💬</div>
+      <h3>Psixoloji Bildirişlər</h3>
+      <p>"Hooked" çərçivəsinə əsaslanan FOMO, itirilmə qorxusu və sosial sübut mesajları</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">🏆</div>
+      <h3>Gamification</h3>
+      <p>Xal sistemi, badge-lər, leaderboard — rəqabət və motivasiya üçün</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">📅</div>
+      <h3>Tədbir İdarəetmə</h3>
+      <p>Qeydiyyat, iştirak təsdiqi, ONLINE/OFFLINE/HYBRID dəstəyi</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">📢</div>
+      <h3>Hədəflənmiş Reklamlar</h3>
+      <p>Üzvlərin bacarıqlarına uyğun iş elanları, staj və investisiya fürsətləri</p>
+    </div>
+  </div>
+  <div class="footer">
+    <span>CommunityPulse — Həll</span>
+    <span>Səhifə 3/5</span>
+  </div>
+</div>
+
+<!-- ============ SLIDE 4: Tech & Business Model ============ -->
+<div class="slide slide-4">
+  <h2>⚙️ Texnologiya & Biznes Model</h2>
+  <div class="two-col">
+    <div>
+      <div class="col-title">🛠️ Texnologiya Steki</div>
+      <ul class="tech-list">
+        <li><span class="dot"></span>Backend: Java 17 + Spring Boot 3.2</li>
+        <li><span class="dot"></span>Frontend: React 18 + Vite + Framer Motion</li>
+        <li><span class="dot"></span>AI: Google Gemini 2.5 Flash API</li>
+        <li><span class="dot"></span>Auth: JWT + Spring Security</li>
+        <li><span class="dot"></span>DB: H2 (dev) → PostgreSQL (prod)</li>
+        <li><span class="dot"></span>Design: Glassmorphism, Dark Theme</li>
+        <li><span class="dot"></span>API: RESTful, 25+ endpoint</li>
+      </ul>
+    </div>
+    <div>
+      <div class="col-title">💰 Gəlir Modeli</div>
+      <div class="revenue-card">
+        <h4>Freemium Abunəlik</h4>
+        <p>Free: 2 icma, 50 üzv. Pro: $19/ay — AI, analitika. Enterprise: $79/ay — limitsiz.</p>
+      </div>
+      <div class="revenue-card">
+        <h4>Hədəflənmiş Reklamlar</h4>
+        <p>Şirkətlər üzvlərin bacarıqlarına uyğun JOB/INTERNSHIP elanları yerləşdirə bilir. CPC model.</p>
+      </div>
+      <div class="revenue-card">
+        <h4>API İnteqrasiyası</h4>
+        <p>Enterprise müştərilər üçün API access — Discord/Slack bot, xüsusi dashboard.</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <span>CommunityPulse — Texnologiya & Biznes</span>
+    <span>Səhifə 4/5</span>
+  </div>
+</div>
+
+<!-- ============ SLIDE 5: Summary & CTA ============ -->
+<div class="slide slide-5">
+  <h2>🚀 CommunityPulse ilə İcmalar Canlanır</h2>
+  <div class="summary-grid">
+    <div class="summary-stat">
+      <div class="num">12</div>
+      <div class="label">Səhifə (Frontend)</div>
+    </div>
+    <div class="summary-stat">
+      <div class="num">25+</div>
+      <div class="label">API Endpoint</div>
+    </div>
+    <div class="summary-stat">
+      <div class="num">3</div>
+      <div class="label">AI Funksiyası</div>
+    </div>
+    <div class="summary-stat">
+      <div class="num">6</div>
+      <div class="label">Badge & Gamification</div>
+    </div>
+  </div>
+  <div class="demo-url">🖥️ Demo: localhost:5173 — Giriş: ali / User123!</div>
+  <div class="cta">Suallarınız? Canlı demo göstərək! 🎯</div>
+  <div class="footer">
+    <span>CommunityPulse — Young Developers Komandası</span>
+    <span>Səhifə 5/5</span>
+  </div>
+</div>
+
+</body>
+</html>
