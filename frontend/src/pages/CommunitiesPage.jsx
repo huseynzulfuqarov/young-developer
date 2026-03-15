@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Search, Users, LogOut, Calendar, User as UserIcon } from 'lucide-react';
+import { Plus, Search, Users, LogOut, Calendar, User as UserIcon, Trash2, UserMinus, Edit3 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import MainLayout from '../components/layout/MainLayout';
 import GlassCard from '../components/common/GlassCard';
@@ -74,6 +74,12 @@ const CommunitiesPage = () => {
   const [detailMembers, setDetailMembers] = useState([]);
   const [detailEvents, setDetailEvents] = useState([]);
   const [detailTab, setDetailTab] = useState('about');
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editForm, setEditForm] = useState({ name: '', description: '', category: '' });
+
+  const { request: deleteCommunity } = useApi();
+  const { request: kickMember } = useApi();
+  const { request: updateCommunity } = useApi();
 
   const loadData = async () => {
     fetchCommunities('get', '/communities');
@@ -110,6 +116,36 @@ const CommunitiesPage = () => {
     const res = await leaveCommunity('delete', `/communities/${id}/leave`);
     if (res.success) {
       toast.success('Left community successfully');
+      loadData();
+    }
+  };
+
+  const handleDeleteCommunity = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this community?')) return;
+    const res = await deleteCommunity('delete', `/communities/${id}`);
+    if (res.success) {
+      toast.success('Community deleted');
+      setSelectedCommunity(null);
+      loadData();
+    }
+  };
+
+  const handleKickMember = async (communityId, userId) => {
+    if (!window.confirm('Remove this member from the community?')) return;
+    const res = await kickMember('delete', `/communities/${communityId}/kick/${userId}`);
+    if (res.success) {
+      toast.success('Member removed');
+      setDetailMembers(prev => prev.filter(m => m.id !== userId));
+    }
+  };
+
+  const handleEditCommunity = async (e) => {
+    e.preventDefault();
+    const res = await updateCommunity('put', `/communities/${selectedCommunity.id}`, editForm);
+    if (res.success) {
+      toast.success('Community updated!');
+      setIsEditMode(false);
+      setSelectedCommunity(null);
       loadData();
     }
   };
@@ -251,10 +287,19 @@ const CommunitiesPage = () => {
                 {detailMembers.length > 0 ? detailMembers.map(m => (
                   <div key={m.id} className="premium-list-item" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.75rem 1rem', background: 'rgba(255,255,255,0.03)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
                     <Avatar alt={m.fullName || m.username} size="40px" />
-                    <div>
+                    <div style={{ flex: 1 }}>
                       <div style={{ fontWeight: 600 }}>{m.fullName || m.username}</div>
                       <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>@{m.username}</div>
                     </div>
+                    {selectedCommunity.ownerUserId === user?.userId && m.id !== user?.userId && (
+                      <button onClick={() => handleKickMember(selectedCommunity.id, m.id)} style={{
+                        background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)',
+                        borderRadius: 'var(--radius-md)', padding: '0.4rem 0.6rem', cursor: 'pointer',
+                        display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'var(--accent-danger)', fontSize: '0.75rem'
+                      }}>
+                        <UserMinus size={14} /> Kick
+                      </button>
+                    )}
                   </div>
                 )) : <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>No members found.</div>}
               </div>
@@ -276,9 +321,16 @@ const CommunitiesPage = () => {
               </div>
             )}
 
-            <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem' }}>
+            <div style={{ marginTop: '1rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
               {selectedCommunity.ownerUserId === user?.userId ? (
-                 <Button style={{ flex: 1 }} disabled>You are the owner</Button>
+                 <>
+                   <Button onClick={() => { setEditForm({ name: selectedCommunity.name, description: selectedCommunity.description, category: selectedCommunity.category }); setIsEditMode(true); }} style={{ flex: 1 }}>
+                     <Edit3 size={16} /> Edit Community
+                   </Button>
+                   <Button variant="secondary" onClick={() => handleDeleteCommunity(selectedCommunity.id)} style={{ color: 'var(--accent-danger)', borderColor: 'rgba(239,68,68,0.3)' }}>
+                     <Trash2 size={16} /> Delete
+                   </Button>
+                 </>
               ) : joinedIds.includes(selectedCommunity.id) ? (
                  <Button variant="secondary" onClick={() => { handleLeave(selectedCommunity.id); setSelectedCommunity(null); }} style={{ flex: 1, color: 'var(--accent-danger)' }}>
                   Leave Community
@@ -291,6 +343,25 @@ const CommunitiesPage = () => {
             </div>
           </div>
         )}
+      </Modal>
+
+      {/* Edit Community Modal */}
+      <Modal isOpen={isEditMode} onClose={() => setIsEditMode(false)} title="Edit Community">
+        <form onSubmit={handleEditCommunity} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div>
+            <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>Name</label>
+            <Input required value={editForm.name} onChange={e => setEditForm({...editForm, name: e.target.value})} />
+          </div>
+          <div>
+            <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>Category</label>
+            <Input required value={editForm.category} onChange={e => setEditForm({...editForm, category: e.target.value})} />
+          </div>
+          <div>
+            <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>Description</label>
+            <textarea required value={editForm.description} onChange={e => setEditForm({...editForm, description: e.target.value})} className="input-field" rows={4} style={{ resize: 'vertical' }} />
+          </div>
+          <Button type="submit" style={{ marginTop: '1rem' }}>Save Changes</Button>
+        </form>
       </Modal>
     </MainLayout>
   );

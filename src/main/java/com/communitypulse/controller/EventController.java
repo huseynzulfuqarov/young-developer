@@ -46,4 +46,17 @@ public class EventController {
     public ResponseEntity<List<EventAttendance>> getEventAttendees(@PathVariable Long id) {
         return ResponseEntity.ok(eventService.getEventAttendees(id));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Event> updateEvent(@PathVariable Long id,
+                                             @Valid @RequestBody CreateEventRequest request,
+                                             Authentication authentication) {
+        return ResponseEntity.ok(eventService.updateEvent(id, request, authentication.getName()));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteEvent(@PathVariable Long id, Authentication authentication) {
+        eventService.deleteEvent(id, authentication.getName());
+        return ResponseEntity.noContent().build();
+    }
 }

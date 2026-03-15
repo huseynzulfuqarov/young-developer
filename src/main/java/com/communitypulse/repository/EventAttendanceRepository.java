@@ -22,4 +22,6 @@ public interface EventAttendanceRepository extends JpaRepository<EventAttendance
     long countByUserIdAndAttendedTrue(Long userId);
 
     long countByEventIdAndAttendedTrue(Long eventId);
+
+    void deleteByEventId(Long eventId);
 }

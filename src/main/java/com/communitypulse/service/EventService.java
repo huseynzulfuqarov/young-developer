@@ -4,6 +4,7 @@ import com.communitypulse.dto.request.CreateEventRequest;
 import com.communitypulse.entity.Event;
 import com.communitypulse.entity.EventAttendance;
 import com.communitypulse.entity.User;
+import com.communitypulse.enums.Role;
 import com.communitypulse.exception.BadRequestException;
 import com.communitypulse.exception.ResourceNotFoundException;
 import com.communitypulse.repository.CommunityRepository;
@@ -120,5 +121,47 @@ public class EventService {
         eventRepository.findById(eventId)
                 .orElseThrow(() -> new ResourceNotFoundException("Event", "id", eventId));
         return attendanceRepository.findByEventId(eventId);
+    }
+
+    /**
+     * Updates an event. Only the creator can update.
+     */
+    @Transactional
+    public Event updateEvent(Long eventId, CreateEventRequest request, String username) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new ResourceNotFoundException("Event", "id", eventId));
+
+        User user = userService.getUserByUsername(username);
+        if (!event.getCreatedByUserId().equals(user.getId()) && user.getRole() != Role.ADMIN) {
+            throw new BadRequestException("Only the event creator can update this event");
+        }
+
+        event.setTitle(request.getTitle());
+        event.setDescription(request.getDescription());
+        event.setEventDate(request.getEventDate());
+        event.setEventType(request.getEventType());
+        event.setMaxAttendees(request.getMaxAttendees());
+
+        Event updated = eventRepository.save(event);
+        log.info("Event '{}' updated by '{}'", updated.getTitle(), username);
+        return updated;
+    }
+
+    /**
+     * Deletes an event. Only the creator or an ADMIN can delete.
+     */
+    @Transactional
+    public void deleteEvent(Long eventId, String username) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new ResourceNotFoundException("Event", "id", eventId));
+
+        User user = userService.getUserByUsername(username);
+        if (!event.getCreatedByUserId().equals(user.getId()) && user.getRole() != Role.ADMIN) {
+            throw new BadRequestException("Only the event creator or an admin can delete this event");
+        }
+
+        attendanceRepository.deleteByEventId(eventId);
+        eventRepository.delete(event);
+        log.info("Event '{}' deleted by '{}'", event.getTitle(), username);
     }
 }

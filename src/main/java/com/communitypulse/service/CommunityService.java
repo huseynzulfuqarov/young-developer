@@ -7,6 +7,7 @@ import com.communitypulse.entity.Community;
 import com.communitypulse.entity.CommunityMembership;
 import com.communitypulse.entity.User;
 import com.communitypulse.enums.MemberStatus;
+import com.communitypulse.enums.Role;
 import com.communitypulse.exception.BadRequestException;
 import com.communitypulse.exception.ResourceNotFoundException;
 import com.communitypulse.repository.CommunityMembershipRepository;
@@ -155,6 +156,49 @@ public class CommunityService {
 
         membershipRepository.deleteByUserIdAndCommunityId(user.getId(), communityId);
         log.info("User '{}' left community ID {}", username, communityId);
+    }
+
+    /**
+     * Soft-deletes a community. Only the owner or an ADMIN can do this.
+     */
+    @Transactional
+    public void deleteCommunity(Long communityId, String username) {
+        Community community = communityRepository.findById(communityId)
+                .orElseThrow(() -> new ResourceNotFoundException("Community", "id", communityId));
+
+        User user = userService.getUserByUsername(username);
+        if (!community.getOwnerUserId().equals(user.getId()) && user.getRole() != Role.ADMIN) {
+            throw new BadRequestException("Only the community owner or an admin can delete this community");
+        }
+
+        community.setActive(false);
+        communityRepository.save(community);
+        log.info("Community '{}' deactivated by user '{}'", community.getName(), username);
+    }
+
+    /**
+     * Removes a member from a community. Only the owner can kick members.
+     */
+    @Transactional
+    public void kickMember(Long communityId, Long targetUserId, String username) {
+        Community community = communityRepository.findById(communityId)
+                .orElseThrow(() -> new ResourceNotFoundException("Community", "id", communityId));
+
+        User owner = userService.getUserByUsername(username);
+        if (!community.getOwnerUserId().equals(owner.getId()) && owner.getRole() != Role.ADMIN) {
+            throw new BadRequestException("Only the community owner can remove members");
+        }
+
+        if (targetUserId.equals(owner.getId())) {
+            throw new BadRequestException("You cannot kick yourself from your own community");
+        }
+
+        if (!membershipRepository.existsByUserIdAndCommunityId(targetUserId, communityId)) {
+            throw new BadRequestException("User is not a member of this community");
+        }
+
+        membershipRepository.deleteByUserIdAndCommunityId(targetUserId, communityId);
+        log.info("User ID {} kicked from community '{}' by '{}'", targetUserId, community.getName(), username);
     }
 
     /**

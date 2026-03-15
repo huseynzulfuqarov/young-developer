@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar as CalendarIcon, Users, Plus } from 'lucide-react';
+import { Calendar as CalendarIcon, Users, Plus, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 import MainLayout from '../components/layout/MainLayout';
@@ -14,7 +14,7 @@ import EmptyState from '../components/common/EmptyState';
 import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
 
-const EventCard = ({ event, onAttend, userId, onViewAttendees }) => {
+const EventCard = ({ event, onAttend, userId, onViewAttendees, onDelete }) => {
   const { data: attendees, request: fetchAttendees, loading } = useApi();
   
   useEffect(() => {
@@ -52,6 +52,15 @@ const EventCard = ({ event, onAttend, userId, onViewAttendees }) => {
             Manage
           </Button>
         )}
+        {isCreator && (
+          <button onClick={() => onDelete(event.id)} style={{
+            background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)',
+            borderRadius: 'var(--radius-md)', padding: '0.5rem', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-danger)'
+          }}>
+            <Trash2 size={16} />
+          </button>
+        )}
         <Button 
           variant={isAttending ? "secondary" : "primary"} 
           disabled={isAttending || loading}
@@ -77,6 +86,7 @@ const EventsPage = () => {
   const { data: events, request: fetchEvents, loading } = useApi();
   const { request: createEvent, loading: creating } = useApi();
   const { request: attendEvent } = useApi();
+  const { request: deleteEventApi } = useApi();
 
   useEffect(() => {
     const init = async () => {
@@ -112,6 +122,15 @@ const EventsPage = () => {
     const res = await attendEvent('post', `/events/${eventId}/attend`);
     if(res.success) {
       toast.success('Successfully registered for event!');
+      fetchEvents('get', `/events/community/${selectedCommunityId}`);
+    }
+  };
+
+  const handleDeleteEvent = async (eventId) => {
+    if (!window.confirm('Are you sure you want to delete this event?')) return;
+    const res = await deleteEventApi('delete', `/events/${eventId}`);
+    if (res.success) {
+      toast.success('Event deleted');
       fetchEvents('get', `/events/community/${selectedCommunityId}`);
     }
   };
@@ -162,6 +181,7 @@ const EventsPage = () => {
                   onAttend={handleAttend} 
                   userId={user?.userId}
                   onViewAttendees={(ev, att) => setAttendeeModalData({ event: ev, attendees: att })}
+                  onDelete={handleDeleteEvent}
                 />
               </motion.div>
             ))}

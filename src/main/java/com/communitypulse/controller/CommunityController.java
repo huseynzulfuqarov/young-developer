@@ -71,4 +71,17 @@ public class CommunityController {
     public ResponseEntity<List<UserResponse>> getCommunityMembers(@PathVariable Long id) {
         return ResponseEntity.ok(communityService.getCommunityMembers(id));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCommunity(@PathVariable Long id, Authentication authentication) {
+        communityService.deleteCommunity(id, authentication.getName());
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}/kick/{userId}")
+    public ResponseEntity<Void> kickMember(@PathVariable Long id, @PathVariable Long userId,
+                                           Authentication authentication) {
+        communityService.kickMember(id, userId, authentication.getName());
+        return ResponseEntity.noContent().build();
+    }
 }

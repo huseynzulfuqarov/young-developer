@@ -68,7 +68,7 @@ public class DataSeeder implements CommandLineRunner {
         log.info("🌱 Seeding database...");
 
         // ========== USERS ==========
-        User admin = createUser("admin", "admin@communitypulse.com", "Admin123!", "Admin User", Role.ADMIN, null);
+        User admin = createUser("admin", "admin@communitypulse.com", "Admin123!", "Platform Admin", Role.ADMIN, null);
         User shahriyar = createUser("shahriyar", "shahriyar@example.com", "User123!", "Shahriyar Mammadov", Role.ORGANIZER, null);
         User agshin = createUser("agshin", "agshin@example.com", "User123!", "Agshin Aliyev", Role.ORGANIZER, null);
         User lala = createUser("lala", "lala@example.com", "User123!", "Lala Hasanova", Role.MEMBER, "Investment,Finance");
