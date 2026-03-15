@@ -12,9 +12,18 @@ import Modal from '../components/common/Modal';
 import { Skeleton } from '../components/common/Loader';
 import EmptyState from '../components/common/EmptyState';
 import useApi from '../hooks/useApi';
+import useAuth from '../hooks/useAuth';
 
-const EventCard = ({ event, onAttend, attendingIds = [] }) => {
-  const isAttending = attendingIds.includes(event.id);
+const EventCard = ({ event, onAttend, userId, onViewAttendees }) => {
+  const { data: attendees, request: fetchAttendees, loading } = useApi();
+  
+  useEffect(() => {
+    fetchAttendees('get', `/events/${event.id}/attendees`);
+  }, [event.id, fetchAttendees]);
+
+  const attendingIds = attendees ? attendees.map(a => a.userId) : [];
+  const isAttending = attendingIds.includes(userId);
+  const isCreator = event.createdByUserId === userId;
   
   return (
     <GlassCard hover padding="1.5rem" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -33,26 +42,35 @@ const EventCard = ({ event, onAttend, attendingIds = [] }) => {
       
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '1.5rem' }}>
         <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-          <Users size={16} /> Max: {event.maxAttendees}
+          <Users size={16} /> Enrolled: {attendingIds.length} / {event.maxAttendees > 0 ? event.maxAttendees : '∞'}
         </span>
       </div>
       
-      <Button 
-        variant={isAttending ? "secondary" : "primary"} 
-        disabled={isAttending}
-        onClick={() => onAttend(event.id)}
-        style={{ width: '100%', marginTop: 'auto' }}
-      >
-        {isAttending ? 'Registered ✅' : 'Attend Event'}
-      </Button>
+      <div style={{ display: 'flex', gap: '0.5rem', marginTop: 'auto' }}>
+        {isCreator && (
+          <Button variant="secondary" onClick={() => onViewAttendees(event, attendees)} style={{ flex: 1 }}>
+            Manage
+          </Button>
+        )}
+        <Button 
+          variant={isAttending ? "secondary" : "primary"} 
+          disabled={isAttending || loading}
+          onClick={() => onAttend(event.id)}
+          style={{ flex: 1 }}
+        >
+          {loading ? 'Checking...' : isAttending ? 'Registered ✅' : 'Attend Event'}
+        </Button>
+      </div>
     </GlassCard>
   );
 };
 
 const EventsPage = () => {
+  const { user } = useAuth();
   const [communities, setCommunities] = useState([]);
   const [selectedCommunityId, setSelectedCommunityId] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [attendeeModalData, setAttendeeModalData] = useState(null);
   const [formData, setFormData] = useState({ title: '', description: '', eventDate: '', eventType: 'ONLINE', maxAttendees: 50 });
   
   const { request: fetchCommunities } = useApi();
@@ -139,7 +157,12 @@ const EventsPage = () => {
           >
             {events.map(event => (
               <motion.div key={event.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={{height: '100%'}}>
-                <EventCard event={event} onAttend={handleAttend} />
+                <EventCard 
+                  event={event} 
+                  onAttend={handleAttend} 
+                  userId={user?.userId}
+                  onViewAttendees={(ev, att) => setAttendeeModalData({ event: ev, attendees: att })}
+                />
               </motion.div>
             ))}
           </motion.div>
@@ -181,6 +204,39 @@ const EventsPage = () => {
           </div>
           <Button type="submit" loading={creating} style={{ marginTop: '1rem' }}>Create Event</Button>
         </form>
+      </Modal>
+
+      {/* Attendees Management Modal */}
+      <Modal isOpen={!!attendeeModalData} onClose={() => setAttendeeModalData(null)} title={`Manage: ${attendeeModalData?.event?.title || ''}`}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+            <Users size={20} color="var(--accent-primary)" />
+            <h3 style={{ margin: 0, fontSize: '1.25rem' }}>Attendee List</h3>
+            <Badge variant="info" style={{ marginLeft: 'auto' }}>
+              {attendeeModalData?.attendees?.length || 0} Registered
+            </Badge>
+          </div>
+          
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', maxHeight: '400px', overflowY: 'auto' }}>
+            {attendeeModalData?.attendees?.length > 0 ? (
+              attendeeModalData.attendees.map(attendance => (
+                <div key={attendance.id} className="premium-list-item" style={{ 
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between', 
+                  padding: '1rem', background: 'rgba(255,255,255,0.03)', 
+                  borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' 
+                }}>
+                  <div style={{ fontWeight: 600 }}>User ID: {attendance.userId}</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--accent-success)' }}>Registered</div>
+                </div>
+              ))
+            ) : (
+              <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>
+                No attendees yet.
+              </div>
+            )}
+          </div>
+          <Button variant="secondary" onClick={() => setAttendeeModalData(null)} style={{ marginTop: '1rem' }}>Close</Button>
+        </div>
       </Modal>
     </MainLayout>
   );

@@ -35,8 +35,8 @@ const MemberStatusChart = ({ data }) => {
   return (
     <GlassCard style={{ height: '300px', display: 'flex', flexDirection: 'column' }}>
       <h3 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '1rem' }}>Member Status</h3>
-      <div style={{ flex: 1, width: '100%', minHeight: 0 }}>
-        <ResponsiveContainer width="100%" height="100%">
+      <div style={{ height: '300px', width: '100%' }}>
+        <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
           <PieChart>
             <Pie
               data={chartData}

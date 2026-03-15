@@ -1,21 +1,23 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Users, Flame, Calendar, Bell, Trophy, Target, Sparkles, User as UserIcon, LogOut } from 'lucide-react';
+import { LayoutDashboard, Users, Flame, Calendar, Award, Megaphone, Sparkles, User as UserIcon, LogOut } from 'lucide-react';
 import useAuth from '../../hooks/useAuth';
 
 const Sidebar = ({ isOpen, closeSidebar }) => {
   const { logout } = useAuth();
   
-  const navItems = [
-    { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { path: '/communities', label: 'Communities', icon: Users },
-    { path: '/streaks', label: 'Streaks', icon: Flame },
-    { path: '/events', label: 'Events', icon: Calendar },
-    { path: '/notifications', label: 'Notifications', icon: Bell },
-    { path: '/leaderboard', label: 'Leaderboard', icon: Trophy },
-    { path: '/ads', label: 'Ads & Opps', icon: Target },
-    { path: '/ai', label: 'AI Insights', icon: Sparkles },
-    { path: '/profile', label: 'Profile', icon: UserIcon },
+  const mainLinks = [
+    { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
+    { icon: Users, label: 'Communities', path: '/communities' },
+    { icon: Calendar, label: 'Events', path: '/events' },
+    { icon: Award, label: 'Leaderboard', path: '/leaderboard' },
+  ];
+
+  const personalLinks = [
+    { icon: Flame, label: 'My Streaks', path: '/streaks' },
+    { icon: Sparkles, label: 'AI Insights', path: '/ai-insights' },
+    { icon: Megaphone, label: 'Advertisements', path: '/ads' },
+    { icon: UserIcon, label: 'Profile', path: '/profile' }
   ];
 
   return (
@@ -53,30 +55,59 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
           </h2>
         </div>
 
-        <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '0 1rem', flex: 1, overflowY: 'auto' }}>
-          {navItems.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              onClick={closeSidebar}
-              style={({ isActive }) => ({
-                display: 'flex', alignItems: 'center', gap: '1rem',
-                padding: '0.875rem 1rem', borderRadius: 'var(--radius-md)',
-                color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
-                background: isActive ? 'linear-gradient(90deg, rgba(99, 102, 241, 0.15) 0%, transparent 100%)' : 'transparent',
-                borderLeft: isActive ? '3px solid var(--accent-primary)' : '3px solid transparent',
-                fontWeight: isActive ? 600 : 500,
-                textShadow: isActive ? '0 0 12px rgba(99, 102, 241, 0.5)' : 'none',
-                boxShadow: isActive ? 'inset 20px 0 20px -20px rgba(99, 102, 241, 0.3)' : 'none',
-                transition: 'all var(--transition-fast)'
-              })}
-              className="sidebar-link"
-            >
-              <item.icon size={20} style={{ color: 'inherit' }} />
-              {item.label}
-            </NavLink>
-          ))}
-        </nav>
+        <div style={{ padding: '0 1.5rem', flex: 1, overflowY: 'auto' }}>
+          <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1rem', marginTop: '0.5rem' }}>Menu</div>
+          <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '2rem' }}>
+            {mainLinks.map(item => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                onClick={closeSidebar}
+                style={({ isActive }) => ({
+                  display: 'flex', alignItems: 'center', gap: '1rem',
+                  padding: '0.875rem 1rem', borderRadius: 'var(--radius-md)',
+                  color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
+                  background: isActive ? 'linear-gradient(90deg, rgba(99, 102, 241, 0.15) 0%, transparent 100%)' : 'transparent',
+                  borderLeft: isActive ? '3px solid var(--accent-primary)' : '3px solid transparent',
+                  fontWeight: isActive ? 600 : 500,
+                  textShadow: isActive ? '0 0 12px rgba(99, 102, 241, 0.5)' : 'none',
+                  boxShadow: isActive ? 'inset 20px 0 20px -20px rgba(99, 102, 241, 0.3)' : 'none',
+                  transition: 'all var(--transition-fast)'
+                })}
+                className="sidebar-link"
+              >
+                <item.icon size={20} style={{ color: 'inherit' }} />
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
+
+          <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1rem' }}>Personal</div>
+          <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            {personalLinks.map(item => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                onClick={closeSidebar}
+                style={({ isActive }) => ({
+                  display: 'flex', alignItems: 'center', gap: '1rem',
+                  padding: '0.875rem 1rem', borderRadius: 'var(--radius-md)',
+                  color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
+                  background: isActive ? 'linear-gradient(90deg, rgba(99, 102, 241, 0.15) 0%, transparent 100%)' : 'transparent',
+                  borderLeft: isActive ? '3px solid var(--accent-primary)' : '3px solid transparent',
+                  fontWeight: isActive ? 600 : 500,
+                  textShadow: isActive ? '0 0 12px rgba(99, 102, 241, 0.5)' : 'none',
+                  boxShadow: isActive ? 'inset 20px 0 20px -20px rgba(99, 102, 241, 0.3)' : 'none',
+                  transition: 'all var(--transition-fast)'
+                })}
+                className="sidebar-link"
+              >
+                <item.icon size={20} style={{ color: 'inherit' }} />
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
+        </div>
 
         <div style={{ padding: '0 1.5rem', marginTop: 'auto' }}>
           <button 
