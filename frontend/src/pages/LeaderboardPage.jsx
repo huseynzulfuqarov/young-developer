@@ -17,15 +17,15 @@ const PodiumStep = ({ user, rank }) => {
   const bgs = { 1: 'linear-gradient(180deg, rgba(234,179,8,0.2) 0%, transparent 100%)', 2: 'linear-gradient(180deg, rgba(148,163,184,0.2) 0%, transparent 100%)', 3: 'linear-gradient(180deg, rgba(180,83,9,0.2) 0%, transparent 100%)' };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, position: 'relative' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, position: 'relative', maxWidth: '180px' }}>
       <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: rank * 0.2 }}>
-        <Avatar alt={user.username || user.fullName} size="64px" style={{ marginBottom: '-32px', position: 'relative', zIndex: 10, border: `2px solid ${colors[rank]}` }} />
+        <Avatar alt={user.username || user.fullName} size="64px" style={{ marginBottom: '-32px', position: 'relative', zIndex: 10, border: `2px solid ${colors[rank]}`, background: 'var(--bg-secondary)', boxShadow: `0 0 15px ${colors[rank]}40` }} />
       </motion.div>
       <motion.div 
         initial={{ height: 0 }} animate={{ height: heights[rank] }} transition={{ delay: 0.5 + rank * 0.1, duration: 0.5 }}
-        style={{ width: '100%', background: bgs[rank], border: `1px solid ${colors[rank]}40`, borderBottom: 'none', borderTopLeftRadius: '16px', borderTopRightRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: '40px' }}
+        style={{ width: '100%', background: bgs[rank], border: `1px solid ${colors[rank]}40`, borderBottom: 'none', borderTopLeftRadius: '16px', borderTopRightRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: '40px', boxShadow: `0 -10px 20px -5px ${colors[rank]}20` }}
       >
-        <div style={{ fontSize: '1.5rem', fontWeight: 800, color: colors[rank] }}>{rank}</div>
+        <div style={{ fontSize: '1.5rem', fontWeight: 800, color: colors[rank], textShadow: `0 0 10px ${colors[rank]}80` }}>{rank}</div>
         <div style={{ fontSize: '0.875rem', fontWeight: 600, marginTop: '0.25rem', textAlign: 'center', padding: '0 0.25rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>{user.username || user.fullName}</div>
         <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '0.25rem', marginTop: '0.25rem' }}>
           <Flame size={14} color="var(--accent-warning)" /> {user.currentStreak}
@@ -111,9 +111,9 @@ const LeaderboardPage = () => {
         ) : leaderboard && leaderboard.length > 0 ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
             <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: '0.5rem', height: '220px', maxWidth: '600px', margin: '0 auto', width: '100%' }}>
-              <PodiumStep user={top3[1]} rank={2} />
-              <PodiumStep user={top3[0]} rank={1} />
-              <PodiumStep user={top3[2]} rank={3} />
+              {top3.length > 1 && <PodiumStep user={top3[1]} rank={2} />}
+              {top3.length > 0 && <PodiumStep user={top3[0]} rank={1} />}
+              {top3.length > 2 && <PodiumStep user={top3[2]} rank={3} />}
             </div>
 
             <GlassCard padding="0">
@@ -124,6 +124,7 @@ const LeaderboardPage = () => {
                   return (
                     <motion.div 
                       key={user.userId} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.05 }}
+                      className="premium-list-item"
                       style={{ 
                         display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem 1.5rem',
                         borderBottom: '1px solid var(--border-subtle)', background: isCurrent ? 'rgba(99,102,241,0.05)' : 'transparent',

@@ -13,11 +13,12 @@ import EmptyState from '../components/common/EmptyState';
 import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
 
-const CommunityCard = ({ community, onJoin, onLeave, userId, joinedIds }) => {
+const CommunityCard = ({ community, onJoin, onLeave, userId, joinedIds, onViewDetails }) => {
   const isOwner = community.ownerUserId === userId;
   const isMember = joinedIds.includes(community.id);
 
   return (
+    <div onClick={() => onViewDetails(community)} style={{ cursor: 'pointer', height: '100%' }}>
     <GlassCard hover padding="1.5rem" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
         <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--gradient-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '1.25rem' }}>
@@ -40,22 +41,24 @@ const CommunityCard = ({ community, onJoin, onLeave, userId, joinedIds }) => {
         {isOwner ? (
           <Badge variant="primary">Owner</Badge>
         ) : isMember ? (
-          <Button variant="secondary" onClick={() => onLeave(community.id)} style={{ padding: '0.5rem 1rem', fontSize: '0.875rem', color: 'var(--accent-danger)', borderColor: 'rgba(239, 68, 68, 0.2)' }}>
+          <Button variant="secondary" onClick={(e) => { e.stopPropagation(); onLeave(community.id); }} style={{ padding: '0.5rem 1rem', fontSize: '0.875rem', color: 'var(--accent-danger)', borderColor: 'rgba(239, 68, 68, 0.2)' }}>
             <LogOut size={14} /> Leave
           </Button>
         ) : (
-          <Button variant="secondary" onClick={() => onJoin(community.id)} style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }}>
+          <Button variant="secondary" onClick={(e) => { e.stopPropagation(); onJoin(community.id); }} style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }}>
             Join
           </Button>
         )}
       </div>
     </GlassCard>
+    </div>
   );
 };
 
 const CommunitiesPage = () => {
   const [search, setSearch] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCommunity, setSelectedCommunity] = useState(null);
   const [formData, setFormData] = useState({ name: '', description: '', category: '' });
   const [joinedIds, setJoinedIds] = useState([]);
   
@@ -145,7 +148,7 @@ const CommunitiesPage = () => {
           >
             {filtered.map(community => (
               <motion.div key={community.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-                <CommunityCard community={community} onJoin={handleJoin} onLeave={handleLeave} userId={user?.userId} joinedIds={joinedIds} />
+                <CommunityCard community={community} onJoin={handleJoin} onLeave={handleLeave} userId={user?.userId} joinedIds={joinedIds} onViewDetails={setSelectedCommunity} />
               </motion.div>
             ))}
           </motion.div>
@@ -179,6 +182,52 @@ const CommunitiesPage = () => {
           </div>
           <Button type="submit" loading={creating} style={{ marginTop: '1rem' }}>Create Community</Button>
         </form>
+      </Modal>
+
+      {/* Community Details Modal */}
+      <Modal isOpen={!!selectedCommunity} onClose={() => setSelectedCommunity(null)} title="Community Details">
+        {selectedCommunity && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <div style={{ width: '64px', height: '64px', borderRadius: '16px', background: 'var(--gradient-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '1.75rem', boxShadow: '0 8px 16px rgba(99, 102, 241, 0.3)' }}>
+                {selectedCommunity.name.charAt(0).toUpperCase()}
+              </div>
+              <div>
+                <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800 }}>{selectedCommunity.name}</h2>
+                <Badge variant="info" style={{ marginTop: '0.25rem', display: 'inline-block' }}>{selectedCommunity.category}</Badge>
+              </div>
+            </div>
+            
+            <div style={{ background: 'rgba(255,255,255,0.03)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
+               <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>About</h4>
+               <p style={{ margin: 0, lineHeight: 1.6, color: 'var(--text-primary)' }}>{selectedCommunity.description}</p>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', borderTop: '1px solid var(--border-subtle)', paddingTop: '1.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-secondary)' }}>
+                <Users size={20} color="var(--accent-primary)" />
+                <div>
+                  <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Members</div>
+                  <div style={{ fontSize: '1.125rem', fontWeight: 700, color: 'var(--text-primary)' }}>{selectedCommunity.memberCount || 0}</div>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem' }}>
+              {selectedCommunity.ownerUserId === user?.userId ? (
+                 <Button style={{ flex: 1 }} disabled>You are the owner</Button>
+              ) : joinedIds.includes(selectedCommunity.id) ? (
+                 <Button variant="secondary" onClick={() => { handleLeave(selectedCommunity.id); setSelectedCommunity(null); }} style={{ flex: 1, color: 'var(--accent-danger)' }}>
+                  Leave Community
+                 </Button>
+              ) : (
+                <Button onClick={() => { handleJoin(selectedCommunity.id); setSelectedCommunity(null); }} style={{ flex: 1 }}>
+                  Join Community
+                </Button>
+              )}
+            </div>
+          </div>
+        )}
       </Modal>
     </MainLayout>
   );

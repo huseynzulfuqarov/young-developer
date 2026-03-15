@@ -33,14 +33,16 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
           position: 'fixed',
           top: 0, left: 0, bottom: 0,
           width: '260px',
-          background: 'var(--bg-secondary)',
+          background: 'linear-gradient(180deg, rgba(15,23,42,0.95) 0%, rgba(15,23,42,0.98) 100%)',
           borderRight: '1px solid var(--border-subtle)',
+          backdropFilter: 'blur(20px)',
           padding: '1.5rem 0',
           display: 'flex',
           flexDirection: 'column',
           zIndex: 100,
           transition: 'transform 0.3s ease',
           transform: isOpen ? 'translateX(0)' : 'translateX(-100%)',
+          boxShadow: '4px 0 24px rgba(0,0,0,0.2)'
         }}
         className={`sidebar ${isOpen ? 'open' : ''}`}
       >
@@ -61,11 +63,14 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
                 display: 'flex', alignItems: 'center', gap: '1rem',
                 padding: '0.875rem 1rem', borderRadius: 'var(--radius-md)',
                 color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
-                background: isActive ? 'rgba(99, 102, 241, 0.1)' : 'transparent',
+                background: isActive ? 'linear-gradient(90deg, rgba(99, 102, 241, 0.15) 0%, transparent 100%)' : 'transparent',
                 borderLeft: isActive ? '3px solid var(--accent-primary)' : '3px solid transparent',
                 fontWeight: isActive ? 600 : 500,
+                textShadow: isActive ? '0 0 12px rgba(99, 102, 241, 0.5)' : 'none',
+                boxShadow: isActive ? 'inset 20px 0 20px -20px rgba(99, 102, 241, 0.3)' : 'none',
                 transition: 'all var(--transition-fast)'
               })}
+              className="sidebar-link"
             >
               <item.icon size={20} style={{ color: 'inherit' }} />
               {item.label}
@@ -76,11 +81,13 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
         <div style={{ padding: '0 1.5rem', marginTop: 'auto' }}>
           <button 
             onClick={logout}
+            className="logout-btn"
             style={{
               width: '100%', display: 'flex', alignItems: 'center', gap: '0.75rem',
               padding: '0.875rem 1rem', background: 'rgba(239, 68, 68, 0.1)',
-              color: 'var(--accent-danger)', border: 'none', borderRadius: 'var(--radius-md)',
-              fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s'
+              color: 'var(--accent-danger)', border: '1px solid rgba(239, 68, 68, 0.2)', 
+              borderRadius: 'var(--radius-md)',
+              fontWeight: 600, cursor: 'pointer', transition: 'all 0.3s'
             }}
           >
             <LogOut size={20} />
@@ -96,6 +103,15 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
             position: sticky !important;
             height: 100vh;
           }
+        }
+        .sidebar-link:hover {
+          background: rgba(255,255,255,0.03) !important;
+          transform: translateX(4px);
+        }
+        .logout-btn:hover {
+          background: rgba(239, 68, 68, 0.2) !important;
+          box-shadow: 0 0 12px rgba(239,68,68,0.3);
+          transform: scale(1.02);
         }
       `}</style>
     </>

@@ -23,12 +23,14 @@ const NotificationItem = ({ notif, onMarkRead }) => {
   return (
     <motion.div 
       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+      className="premium-list-item"
       style={{
         display: 'flex', gap: '1rem', padding: '1.25rem',
         background: notif.isRead ? 'transparent' : 'rgba(255,255,255,0.03)',
         border: notif.isRead ? '1px solid var(--border-subtle)' : '1px solid var(--border-active)',
-        borderRadius: 'var(--radius-md)', transition: 'all 0.2s', position: 'relative',
-        cursor: notif.isRead ? 'default' : 'pointer'
+        borderRadius: 'var(--radius-md)', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', position: 'relative',
+        cursor: notif.isRead ? 'default' : 'pointer',
+        boxShadow: notif.isRead ? 'none' : '0 4px 20px rgba(0,0,0,0.15)'
       }}
       onClick={() => { if(!notif.isRead) onMarkRead(notif.id); }}
     >
@@ -108,7 +110,7 @@ const NotificationsPage = () => {
           <GlassCard padding="0">
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', background: 'var(--border-subtle)' }}>
               {notifications.map(notif => (
-                <div key={notif.id} style={{ background: 'var(--bg-secondary)' }}>
+                <div key={notif.id} style={{ background: 'var(--bg-secondary)', marginBottom: '0.25rem', borderRadius: 'var(--radius-md)' }}>
                   <NotificationItem notif={notif} onMarkRead={handleMarkRead} />
                 </div>
               ))}
