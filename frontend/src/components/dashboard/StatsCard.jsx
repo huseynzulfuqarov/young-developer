@@ -14,7 +14,7 @@ const StatsCard = ({ title, value, icon: Icon, trend, trendUp, color = 'var(--ac
     const increment = end / steps;
     
     if (end === 0) {
-      setDisplayValue(value);
+      setDisplayValue(end);
       return;
     }
 
@@ -22,7 +22,7 @@ const StatsCard = ({ title, value, icon: Icon, trend, trendUp, color = 'var(--ac
       start += increment;
       if (start >= end) {
         clearInterval(timer);
-        setDisplayValue(value);
+        setDisplayValue(end);
       } else {
         setDisplayValue(Math.floor(start));
       }
@@ -38,6 +38,7 @@ const StatsCard = ({ title, value, icon: Icon, trend, trendUp, color = 'var(--ac
           <p style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-secondary)', margin: '0 0 0.5rem 0' }}>{title}</p>
           <h3 style={{ fontSize: '1.75rem', fontWeight: 800, margin: 0, color: 'var(--text-primary)' }}>
             {displayValue}
+            {typeof value === 'string' && value.toString().includes('%') && '%'}
           </h3>
         </div>
         <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: `${color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: color }}>
