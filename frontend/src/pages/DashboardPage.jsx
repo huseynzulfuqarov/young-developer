@@ -119,7 +119,7 @@ const DashboardPage = () => {
               />
               <StatsCard 
                 title="Engagement Rate" 
-                value={`${dashboardData.engagementRate || 0}%`} 
+                value={dashboardData.engagementRate || 0} 
                 icon={Activity} 
                 trend="Stable" trendUp={true}
                 color="var(--accent-secondary)" 
