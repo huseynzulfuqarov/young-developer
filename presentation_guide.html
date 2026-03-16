@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<title>CommunityPulse — Təqdimat Hazırlıq Qidi</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 40px 60px;
+    line-height: 1.7;
+  }
+  h1 {
+    font-size: 36px; font-weight: 900;
+    background: linear-gradient(135deg, #818cf8, #c084fc);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+  .subtitle { color: #94a3b8; font-size: 16px; margin-bottom: 40px; }
+  h2 {
+    font-size: 24px; font-weight: 800; margin: 40px 0 20px 0;
+    padding-bottom: 10px; border-bottom: 2px solid rgba(99,102,241,0.3);
+  }
+  h3 { font-size: 18px; font-weight: 700; margin: 24px 0 8px 0; color: #a5b4fc; }
+
+  .section {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 20px;
+  }
+
+  .script-box {
+    background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.04));
+    border-left: 4px solid #818cf8;
+    border-radius: 0 12px 12px 0;
+    padding: 20px 24px;
+    margin: 12px 0;
+    font-size: 15px;
+  }
+  .script-box .label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; color: #818cf8; margin-bottom: 8px;
+  }
+
+  .qa-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .question {
+    font-size: 16px; font-weight: 700; color: #f87171;
+    margin-bottom: 12px; display: flex; align-items: flex-start; gap: 10px;
+  }
+  .question::before { content: '❓'; flex-shrink: 0; }
+  .answer {
+    font-size: 15px; color: #cbd5e1; line-height: 1.7;
+    padding-left: 30px;
+  }
+  .answer strong { color: #34d399; }
+  .answer em { color: #fbbf24; font-style: normal; }
+
+  .tip-box {
+    background: rgba(251, 191, 36, 0.08);
+    border: 1px solid rgba(251, 191, 36, 0.2);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin: 12px 0;
+    font-size: 14px;
+    color: #fbbf24;
+  }
+  .tip-box::before { content: '💡 '; }
+
+  .timeline {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 12px 16px;
+    margin: 16px 0;
+  }
+  .time {
+    font-size: 14px; font-weight: 700; color: #818cf8;
+    text-align: right; padding-top: 2px;
+  }
+  .action { font-size: 15px; color: #cbd5e1; }
+
+  .danger {
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin: 12px 0;
+    font-size: 14px;
+    color: #f87171;
+  }
+  .danger::before { content: '⚠️ '; }
+
+  @media print {
+    body { background: white; color: #1e293b; padding: 20px 40px; }
+    .section, .qa-card { border-color: #e2e8f0; }
+    .script-box { background: #f8fafc; border-left-color: #6366f1; }
+    h1 { -webkit-text-fill-color: #4f46e5; }
+    h2 { border-bottom-color: #c7d2fe; }
+  }
+</style>
+</head>
+<body>
+
+<h1>🎤 Təqdimat Hazırlıq Qidi</h1>
+<p class="subtitle">CommunityPulse — Hackathon Demo Strategiyası, Ssenari və Sual-Cavab</p>
+
+<!-- ============================== -->
+<h2>📋 Təqdimat Planı (5 dəqiqə)</h2>
+<!-- ============================== -->
+<div class="section">
+  <div class="timeline">
+    <div class="time">0:00</div>
+    <div class="action"><strong>Hook:</strong> "İcmaların 60%-i 3 ayda üzvlərinin yarısını itirir. Niyə? Çünki heç bir platforma üzvləri nə vaxt itirəcəyini <em>əvvəlcədən</em> bilmir."</div>
+
+    <div class="time">0:30</div>
+    <div class="action"><strong>Problem:</strong> 4 problemi qısaca izah et — üzv itirilməsi, effektsiz bildirişlər, analitika yoxluğu, hədəfsiz reklamlar</div>
+
+    <div class="time">1:30</div>
+    <div class="action"><strong>Həll:</strong> "CommunityPulse — AI ilə gücləndirilmiş icma idarəetmə platforması" → 6 əsas feature-ı göstər</div>
+
+    <div class="time">2:30</div>
+    <div class="action"><strong>Demo:</strong> Brauzeri aç → Login ol (ali / User123!) → Dashboard → Communities → Events → AI Insights → Pricing</div>
+
+    <div class="time">4:00</div>
+    <div class="action"><strong>Texnologiya & Biznes:</strong> Tech stack + gəlir modeli qısaca</div>
+
+    <div class="time">4:30</div>
+    <div class="action"><strong>Xülasə:</strong> "25+ endpoint, 12 səhifə, 3 AI funksiyası, tam funksional." → Suallar?</div>
+  </div>
+
+  <div class="tip-box">Demo zamanı əvvəlcədən login olmuş brauzeri hazır saxla. Canlı login göstərmə — vaxt itirilir.</div>
+</div>
+
+<!-- ============================== -->
+<h2>🎬 Demo Ssenarisi (Addım-addım)</h2>
+<!-- ============================== -->
+<div class="section">
+  <div class="script-box">
+    <div class="label">Addım 1 — Dashboard</div>
+    "Gördüyünüz kimi, dashboard-da icmaların ümumi vəziyyəti — üzv sayı, aktiv streak-lər, leaderboard-dakı yer. Hər şey real API-dən gəlir."
+  </div>
+  <div class="script-box">
+    <div class="label">Addım 2 — Communities</div>
+    "4 icmamız var. Azerbaijan Tech Community-yə girim — üzvlər, streak-lər tab-larını göstərim. Owner olaraq Edit, Delete, Kick düymələrini görürsünüz."
+  </div>
+  <div class="script-box">
+    <div class="label">Addım 3 — Events</div>
+    "Tədbirlərimiz var — keçmiş və gələcək. İstifadəçi 'Attend' basır → qeydiyyat olur. Creator 'Manage' basır → kimin gəlib-gəlmədiyini görür → 'Confirm' basır → iştirak təsdiqlənir."
+  </div>
+  <div class="script-box">
+    <div class="label">Addım 4 — AI Insights (ÖNƏMLİ!)</div>
+    "Ən fərqləndirici feature-umuz. AI Insights səhifəsində 3 şey var:<br>
+    1) Community Health — icmanın sağlamlıq qiymətləndirməsini Gemini AI edir<br>
+    2) Smart Engagement — üzvün adını, neçə gün aktiv olmadığını yazırsınız → psixoloji prinsiplərə əsaslanan bildiriş yaradır → birbaşa göndərə bilərsiniz<br>
+    3) Member Analysis — hər üzvün fərdi davranış təhlili"
+  </div>
+  <div class="script-box">
+    <div class="label">Addım 5 — Pricing</div>
+    "Biznes modelimiz: Free/Pro/Enterprise. Ödəniş simulyasiyası da var — kart nömrəsi daxil edirsiniz, processing animasiyası, success mesajı."
+  </div>
+
+  <div class="danger">Gemini API 403 verə bilər (rate limit). Narahat olmayın — backend avtomatik olaraq fallback cavab verir. Demo zamanı bunu deyin: "AI hazırda fallback rejimdədir, amma produksiyada real Gemini cavabları gələcək."</div>
+</div>
+
+<!-- ============================== -->
+<h2>❓ Gözlənilən Suallar və Cavablar</h2>
+<!-- ============================== -->
+
+<div class="qa-card">
+  <div class="question">Bu platformanı mövcud olanlardan (Discord, Slack) nə fərqləndirir?</div>
+  <div class="answer">
+    Discord və Slack <strong>kommunikasiya</strong> alətləridir — mesajlaşma üçündür. Biz isə <strong>engagement management</strong> platformasıyıq. Heç bir platforma üzvlərin nə vaxt "churned" olacağını <em>əvvəlcədən</em> proqnozlamır, psixoloji prinsiplərə əsaslanan re-engagement bildirişləri göndərmir, və ya streak/gamification ilə geri qaytarmır. Biz Discord-un əvəzi deyilik — <strong>Discord-un üzərinə əlavə olunan analitika və retention təbəqəsiyik</strong>.
+  </div>
+</div>
+
+<div class="qa-card">
+  <div class="question">Necə pul qazanacaqsınız? Biznes modeli nədir?</div>
+  <div class="answer">
+    <strong>3 gəlir mənbəyi:</strong><br>
+    1) <em>Freemium abunəlik:</em> Free plan 2 icma + 50 üzv limiti. Pro ($19/ay) — AI analitika, unlimited üzv. Enterprise ($79/ay) — API access, white-label, SSO.<br>
+    2) <em>Hədəflənmiş reklamlar:</em> Şirkətlər üzvlərin bacarıqlarına uyğun iş elanları yerləşdirir → CPC (click başına ödəniş) model.<br>
+    3) <em>API inteqrasiyası:</em> Enterprise müştərilər bot inteqrasiyası üçün API access alır.
+  </div>
+</div>
+
+<div class="qa-card">
+  <div class="question">İstifadəçinin aktiv olduğunu haradan bilirsiniz?</div>
+  <div class="answer">
+    <strong>Check-in sistemi</strong> ilə. Hər gün istifadəçi platformaya daxil olub check-in edir → streak artır. Check-in etməsə streak sıfırlanır. Bu Duolingo modelidir — sübut olunmuş retention mexanizmasıdır. Əlavə olaraq, tədbirlərə qeydiyyat və iştirak, icmaya qoşulma, badge qazanma kimi hər fəaliyyət izlənir və xal verilir. <strong>42 gün check-in etməyən</strong> istifadəçi avtomatik olaraq "CHURNED" statusu alır.
+  </div>
+</div>
+
+<div class="qa-card">
+  <div class="question">AI cavabları real API-dən gəlir, yoxsa mock datadır?</div>
+  <div class="answer">
+    <strong>Real Google Gemini 2.5 Flash API</strong>-dən gəlir. Backend-də <code>GeminiAiService</code> var — 3 funksiyası var: community health recommendations, psychological notification generation, və individual member analysis. Əgər API əlçatan deyilsə (rate limit və s.), <strong>avtomatik fallback</strong> mexanizmi var — əvvəlcədən hazırlanmış keyfiyyətli cavablar göstərilir. Yəni istifadəçi heç vaxt boş ekran görmür.
+  </div>
+</div>
+
+<div class="qa-card">
+  <div class="question">Niyə H2 database istifadə edirsiniz? Produksiyada nə olacaq?</div>
+  <div class="answer">
+    H2 yalnız <strong>development və demo</strong> üçündür — sürətli, sıfır konfiqurasiya, in-memory. Produksiyada <strong>PostgreSQL</strong>-ə keçid 1 sətirlik konfiqurasiya dəyişikliyidir. JPA/Hibernate istifadə etdiyimiz üçün heç bir kod dəyişikliyi lazım deyil — yalnız <code>application.properties</code>-dəki datasource URL dəyişir.
+  </div>
+</div>
+
+<div class="qa-card">
+  <div class="question">Notification necə göndərilir? Push notification var?</div>
+  <div class="answer">
+    Hazırda bildirişlər <strong>in-app notification</strong> olaraq database-ə yazılır və istifadəçi Notifications səhifəsində görür. AI Insights-dan yaradılan bildirişlər birbaşa həmin istifadəçinin notification siyahısına düşür. <strong>Gələcək planlarımızda:</strong> Firebase Cloud Messaging ilə push notification, email notification inteqrasiyası, və Telegram/Discord webhook-ları var.
+  </div>
+</div>
+
+<div class="qa-card">
+  <div class="question">Psixoloji bildirişlər dediyiniz nədir? Etik problemlər yoxdur?</div>
+  <div class="answer">
+    Nir Eyal-ın <strong>"Hooked"</strong> kitabından ilhamlanmışıq — Trigger → Action → Variable Reward → Investment döngüsü. Məsələn, "42 gün görmədik, dostların aktivdir" (FOMO), "8 günlük streak-in əfsanəvi idi" (nostalgia + itirilmə). <strong>Etik tərəf:</strong> biz manipulyasiya deyil, <em>motivasiya</em> edirik. Duolingo, Spotify Wrapped, GitHub contribution chart — hamısı eyni prinsiplərdən istifadə edir. Bizim məqsəd istifadəçini zorla qaytarmaq deyil, <em>dəyəri xatırlatmaqdır</em>.
+  </div>
+</div>
+
+<div class="qa-card">
+  <div class="question">İstifadəçi digər platformalardan (Google, GitHub) login olsa, onları necə izləyəcəksiniz?</div>
+  <div class="answer">
+    Hazırda <strong>JWT-based öz autentifikasiya sistemimiz</strong> var. <strong>OAuth2 inteqrasiyası</strong> (Google, GitHub login) Spring Security OAuth2 Client ilə asanlıqla əlavə olunur — roadmap-da var. İstifadəçi Google ilə login olsa belə, platformadakı bütün fəaliyyəti — check-in, event attendance, xal — <strong>bizim database-də</strong> izlənir. Xarici platformadan yalnız autentifikasiya alırıq, engagement tracking tamamilə bizimdir.
+  </div>
+</div>
+
+<div class="qa-card">
+  <div class="question">Security necə təmin olunub?</div>
+  <div class="answer">
+    <strong>Spring Security + JWT token</strong> autentifikasiyası. Hər API sorğusu Bearer token tələb edir. Şifrələr <strong>BCrypt</strong> ilə hash olunur. CORS konfiqurasiyası var. Owner-only əməliyyatlar (community delete, member kick, event delete) service səviyyəsində yoxlanır — yalnız owner və ya admin icazə alır. <strong>SQL injection</strong>-dan qorunma JPA/Hibernate tərəfindən avtomatik təmin olunur.
+  </div>
+</div>
+
+<div class="qa-card">
+  <div class="question">Layihənin scalability-si necədir? 10.000 istifadəçiyə dözə bilər?</div>
+  <div class="answer">
+    Arxitektura <strong>stateless</strong>-dir — JWT token istifadə etdiyimiz üçün horizontal scaling mümkündür. PostgreSQL + connection pooling (HikariCP default gəlir) minlərlə concurrent istifadəçini dəstəkləyir. Gemini API sorğuları <strong>async WebClient</strong> ilə edilir — blocking yoxdur. Gələcəkdə Redis cache əlavə etməklə 100K+ istifadəçini rahat dəstəkləyə bilərik.
+  </div>
+</div>
+
+<div class="qa-card">
+  <div class="question">Bu layihəni real dünyada tətbiq etmək üçün nə lazımdır?</div>
+  <div class="answer">
+    <strong>3 addım:</strong><br>
+    1) PostgreSQL database + production server (AWS/DigitalOcean — $20/ay)<br>
+    2) Gemini API key (Google AI Studio-dan pulsuz tier var)<br>
+    3) Domain + SSL sertifikatı<br>
+    <strong>Cəmi 2-3 həftə</strong> əlavə iş ilə produksiyaya çıxarıla bilər. Kod artıq produksiya keyfiyyətindədir — error handling, fallback, role-based access control hamısı var.
+  </div>
+</div>
+
+<!-- ============================== -->
+<h2>🏆 Bizi Fərqləndirən 5 Şey</h2>
+<!-- ============================== -->
+<div class="section">
+  <div class="script-box">
+    <div class="label">Demo-da mütləq vurğulayın</div>
+    <strong>1. AI Real İnteqrasiyası</strong> — Mock deyil, Gemini 2.5 Flash ilə real API çağırışları + fallback<br><br>
+    <strong>2. Psixoloji Bildiriş Sistemi</strong> — "Hooked" çərçivəsinə əsaslanan, fərdiləşdirilmiş re-engagement<br><br>
+    <strong>3. Tam Funksional</strong> — 25+ endpoint, 12 səhifə, CRUD, role-based access — hər şey işləyir<br><br>
+    <strong>4. Gamification</strong> — Streak, xal, badge, leaderboard — sübut olunmuş retention mexanizması<br><br>
+    <strong>5. Biznes Viability</strong> — 3 gəlir mənbəyi, freemium model, hədəflənmiş reklamlar — pul qazanma yolu aydındır
+  </div>
+</div>
+
+<!-- ============================== -->
+<h2>⚠️ Təqdimat Zamanı Diqqət Edəcək Şeylər</h2>
+<!-- ============================== -->
+<div class="section">
+  <div class="danger">Gemini API 403 versə, panik etmə. De ki: "Fallback rejimdədir, amma produksiyada real cavablar gələcək."</div>
+  <div class="danger">Demo zamanı internet kəsilsə, backend hələ də H2-dən işləyər. Frontend statik fayllar cache-dən yüklənər.</div>
+  <div class="tip-box">Əvvəlcədən bir neçə dəfə tam demo keçin. Hər feature-ı sınayın. Login hazır olsun brauzerdə.</div>
+  <div class="tip-box">Slide-ları göstərəndə hər birində 1 dəqiqədən çox dayanma. Əsas gücünüz canlı demo-dur — onu göstərin!</div>
+  <div class="tip-box">Sual-cavab zamanı bilmədiyiniz sualı etiraf edin və deyin: "Bu roadmap-da var, hazırda prioritetimiz X idi."</div>
+</div>
+
+</body>
+</html>
